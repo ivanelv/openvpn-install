@@ -37,19 +37,19 @@ fi
 
 newclient () {
 	# Generates the custom client.ovpn
-	cp /etc/openvpn/client-common.txt ~/$1.ovpn
-	echo "<ca>" >> ~/$1.ovpn
-	cat /etc/openvpn/easy-rsa/pki/ca.crt >> ~/$1.ovpn
-	echo "</ca>" >> ~/$1.ovpn
-	echo "<cert>" >> ~/$1.ovpn
-	sed -ne '/BEGIN CERTIFICATE/,$ p' /etc/openvpn/easy-rsa/pki/issued/$1.crt >> ~/$1.ovpn
-	echo "</cert>" >> ~/$1.ovpn
-	echo "<key>" >> ~/$1.ovpn
-	cat /etc/openvpn/easy-rsa/pki/private/$1.key >> ~/$1.ovpn
-	echo "</key>" >> ~/$1.ovpn
-	echo "<tls-auth>" >> ~/$1.ovpn
-	sed -ne '/BEGIN OpenVPN Static key/,$ p' /etc/openvpn/ta.key >> ~/$1.ovpn
-	echo "</tls-auth>" >> ~/$1.ovpn
+	cp /etc/openvpn/client-common.txt $OVPN_DIR/$1.ovpn
+	echo "<ca>" >> $OVPN_DIR/$1.ovpn
+	cat /etc/openvpn/easy-rsa/pki/ca.crt >> $OVPN_DIR/$1.ovpn
+	echo "</ca>" >> $OVPN_DIR/$1.ovpn
+	echo "<cert>" >> $OVPN_DIR/$1.ovpn
+	sed -ne '/BEGIN CERTIFICATE/,$ p' /etc/openvpn/easy-rsa/pki/issued/$1.crt >> $OVPN_DIR/$1.ovpn
+	echo "</cert>" >> $OVPN_DIR/$1.ovpn
+	echo "<key>" >> $OVPN_DIR/$1.ovpn
+	cat /etc/openvpn/easy-rsa/pki/private/$1.key >> $OVPN_DIR/$1.ovpn
+	echo "</key>" >> $OVPN_DIR/$1.ovpn
+	echo "<tls-auth>" >> $OVPN_DIR/$1.ovpn
+	sed -ne '/BEGIN OpenVPN Static key/,$ p' /etc/openvpn/ta.key >> $OVPN_DIR/$1.ovpn
+	echo "</tls-auth>" >> $OVPN_DIR/$1.ovpn
 }
 
 if [[ -e /etc/openvpn/server.conf ]]; then
@@ -75,7 +75,7 @@ if [[ -e /etc/openvpn/server.conf ]]; then
 			# Generates the custom client.ovpn
 			newclient "$CLIENT"
 			echo
-			echo "Client $CLIENT added, configuration is available at:" $OVPN_DIR/"$client.ovpn"
+			echo "Client $CLIENT added, configuration is available at:" $OVPN_DIR/"$CLIENT.ovpn"
 			exit
 			;;
 			2)
@@ -376,6 +376,6 @@ verb 3" > /etc/openvpn/client-common.txt
 	echo
 	echo "Finished!"
 	echo
-	echo "Your client configuration is available at:" $OVPN_DIR/"$client.ovpn"
+	echo "Your client configuration is available at:" $OVPN_DIR/"$CLIENT.ovpn"
 	echo "If you want to add more clients, you simply need to run this script again!"
 fi
