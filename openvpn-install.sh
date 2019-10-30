@@ -4,6 +4,8 @@
 #
 # Copyright (c) 2013 Nyr. Released under the MIT License.
 
+OVPN_DIR="~/openvpn-client-config"
+mkdir $OVPN_DIR
 
 if grep -qs "14.04" /etc/os-release; then
 	echo "Ubuntu 14.04 is too old and not supported"
@@ -77,7 +79,7 @@ new_client () {
 	echo "<tls-crypt>"
 	sed -ne '/BEGIN OpenVPN Static key/,$ p' /etc/openvpn/server/tc.key
 	echo "</tls-crypt>"
-	} > ~/"$1".ovpn
+	} > $OVPN_DIR/"$1".ovpn
 }
 
 if [[ -e /etc/openvpn/server/server.conf ]]; then
@@ -108,11 +110,11 @@ if [[ -e /etc/openvpn/server/server.conf ]]; then
 				client=$(sed 's/[^0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-]/_/g' <<< "$unsanitized_client")
 			done
 			cd /etc/openvpn/server/easy-rsa/
-			EASYRSA_CERT_EXPIRE=3650 ./easyrsa build-client-full "$client" nopass
+			EASYRSA_CERT_EXPIRE=3650 ./easyrsa build-client-full "$client"
 			# Generates the custom client.ovpn
 			new_client "$client"
 			echo
-			echo "Client $client added, configuration is available at:" ~/"$client.ovpn"
+			echo "Client $client added, configuration is available at:" $OVPN_DIR/"$client.ovpn"
 			exit
 			;;
 			2)
@@ -456,6 +458,6 @@ verb 3" > /etc/openvpn/server/client-common.txt
 	echo
 	echo "Finished!"
 	echo
-	echo "Your client configuration is available at:" ~/"$client.ovpn"
+	echo "Your client configuration is available at:" $OVPN_DIR/"$client.ovpn"
 	echo "If you want to add more clients, just run this script again!"
 fi
